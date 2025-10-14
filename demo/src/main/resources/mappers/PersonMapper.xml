@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.PersonMapper">
+    <select id="findAll" resultType="com.example.demo.pojo.Person">
+        SELECT * FROM PERSON
+    </select>
+
+    <select id="findById" parameterType="String" resultType="com.example.demo.pojo.Person">
+        SELECT * FROM PERSON WHERE P_CODE = #{P_CODE}
+    </select>
+
+    <insert id="insert" parameterType="com.example.demo.pojo.Person">
+        INSERT INTO PERSON (P_CODE, P_NAME, P_GENDER, P_BIRTHDAY, P_ID_CARD, P_NATIVE, P_ADDRESS, P_PHONE, P_PASSWORD_HASH, P_IS_ACTIVE, P_OTHER)
+        VALUES (#{P_CODE}, #{P_NAME}, #{P_GENDER}, #{P_BIRTHDAY}, #{P_ID_CARD}, #{P_NATIVE}, #{P_ADDRESS}, #{P_PHONE}, #{P_PASSWORD_HASH}, #{P_IS_ACTIVE}, #{P_OTHER})
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.pojo.Person">
+        UPDATE PERSON
+        SET P_NAME=#{P_NAME}, P_GENDER=#{P_GENDER}, P_BIRTHDAY=#{P_BIRTHDAY}, P_ID_CARD=#{P_ID_CARD},
+            P_NATIVE=#{P_NATIVE}, P_ADDRESS=#{P_ADDRESS}, P_PHONE=#{P_PHONE}, P_PASSWORD_HASH=#{P_PASSWORD_HASH},
+            P_IS_ACTIVE=#{P_IS_ACTIVE}, P_OTHER=#{P_OTHER}
+        WHERE P_CODE=#{P_CODE}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM PERSON WHERE P_CODE=#{P_CODE}
+    </delete>
+</mapper>
