@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.dto.PersonAddDTO;
 import com.example.demo.mapper.PersonMapper;
@@ -33,10 +34,12 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
         person.setOther(personAddDTO.getOther());
 
         // 2. 密码加密（推荐使用 BCrypt，而非 MD5）
-        String rawPassword = personAddDTO.getPassword();
-        String hashedPassword = DigestUtils.md5DigestAsHex(rawPassword.getBytes(StandardCharsets.UTF_8));
+//        String rawPassword = personAddDTO.getPassword();
+//        String hashedPassword = DigestUtils.md5DigestAsHex(rawPassword.getBytes(StandardCharsets.UTF_8));
         // 更安全的做法（推荐）：
         // String hashedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+        // 暂时不加密
+        String hashedPassword = personAddDTO.getPassword();
         person.setPasswordHash(hashedPassword);
 
         // 3. 设置系统字段
@@ -57,8 +60,9 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
     }
 
     @Override
-    public int update(Person person) {
-        return mapper.update(person);
+    public boolean update(Person person) {
+        return update(person, Wrappers.lambdaUpdate(Person.class)
+                .eq(Person::getCode, person.getCode()));
     }
 
     @Override

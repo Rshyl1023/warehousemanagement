@@ -1,5 +1,7 @@
 package com.example.demo.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Permission {
-    private String P_CODE;
-    private String R_CODE;
-    private Boolean HAS_PERMISSION;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String personCode;       // 原 P_CODE（P = Person）
+    private String resourceCode;     // 原 R_CODE（R = Resource）
+    private Boolean hasPermission;   // 原 HAS_PERMISSION
 }

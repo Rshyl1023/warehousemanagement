@@ -47,7 +47,7 @@ public class PersonController {
     }
 
     @PutMapping
-    public int update(@RequestBody Person person) {
+    public boolean update(@RequestBody Person person) {
         return service.update(person);
     }
 

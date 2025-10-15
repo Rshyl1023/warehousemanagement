@@ -15,8 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Person {
     // 使用 @TableId 标记主键，IdType.ASSIGN_ID 表示使用 Mybatis-Plus 的雪花算法（分布式）生成ID
-    @TableId(value = "p_code", type = IdType.ASSIGN_ID)
-    private String Code; // 字段名改为驼峰命名
+    @TableId(value = "code", type = IdType.ASSIGN_ID)
+    private String code; // 字段名改为驼峰命名
 
     private String name;
     private String gender;

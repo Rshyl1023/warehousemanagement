@@ -10,6 +10,6 @@ public interface PersonService extends IService<Person> {
     List<Person> getAll();
     Person getById(String id);
     boolean add(PersonAddDTO personAddDTO);
-    int update(Person person);
+    boolean update(Person person);
     int delete(String id);
 }

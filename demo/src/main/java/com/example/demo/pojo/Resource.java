@@ -1,5 +1,7 @@
 package com.example.demo.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Resource {
-    private String R_CODE;
-    private String R_NAME;
-    private String R_TYPE;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String resourceCode;     // 原 R_CODE
+    private String resourceName;     // 原 R_NAME
+    private String resourceType;     // 原 R_TYPE
 }

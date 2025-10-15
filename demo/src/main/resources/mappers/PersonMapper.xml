@@ -40,22 +40,6 @@
                  )
     </insert>
 
-    <update id="update" parameterType="com.example.demo.pojo.Person">
-        UPDATE person
-        SET
-            name = #{name},
-            gender = #{gender},
-            birthday = #{birthday},
-            id_card = #{idCard},
-            native_place = #{nativePlace},
-            address = #{address},
-            phone = #{phone},
-            password_hash = #{passwordHash},
-            is_active = #{isActive},
-            other = #{other}
-        WHERE code = #{code}
-    </update>
-
     <delete id="delete" parameterType="String">
         DELETE FROM person WHERE code = #{code}
     </delete>
