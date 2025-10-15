@@ -3,28 +3,61 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.mapper.PersonMapper">
+
     <select id="findAll" resultType="com.example.demo.pojo.Person">
-        SELECT * FROM PERSON
+        SELECT * FROM person
     </select>
 
     <select id="findById" parameterType="String" resultType="com.example.demo.pojo.Person">
-        SELECT * FROM PERSON WHERE P_CODE = #{P_CODE}
+        SELECT * FROM person WHERE code = #{code}
     </select>
 
     <insert id="insert" parameterType="com.example.demo.pojo.Person">
-        INSERT INTO PERSON (P_CODE, P_NAME, P_GENDER, P_BIRTHDAY, P_ID_CARD, P_NATIVE, P_ADDRESS, P_PHONE, P_PASSWORD_HASH, P_IS_ACTIVE, P_OTHER)
-        VALUES (#{P_CODE}, #{P_NAME}, #{P_GENDER}, #{P_BIRTHDAY}, #{P_ID_CARD}, #{P_NATIVE}, #{P_ADDRESS}, #{P_PHONE}, #{P_PASSWORD_HASH}, #{P_IS_ACTIVE}, #{P_OTHER})
+        INSERT INTO person (
+            code,
+            name,
+            gender,
+            birthday,
+            id_card,
+            native_place,
+            address,
+            phone,
+            password_hash,
+            is_active,
+            other
+        ) VALUES (
+                     #{code},
+                     #{name},
+                     #{gender},
+                     #{birthday},
+                     #{idCard},
+                     #{nativePlace},
+                     #{address},
+                     #{phone},
+                     #{passwordHash},
+                     #{isActive},
+                     #{other}
+                 )
     </insert>
 
     <update id="update" parameterType="com.example.demo.pojo.Person">
-        UPDATE PERSON
-        SET P_NAME=#{P_NAME}, P_GENDER=#{P_GENDER}, P_BIRTHDAY=#{P_BIRTHDAY}, P_ID_CARD=#{P_ID_CARD},
-            P_NATIVE=#{P_NATIVE}, P_ADDRESS=#{P_ADDRESS}, P_PHONE=#{P_PHONE}, P_PASSWORD_HASH=#{P_PASSWORD_HASH},
-            P_IS_ACTIVE=#{P_IS_ACTIVE}, P_OTHER=#{P_OTHER}
-        WHERE P_CODE=#{P_CODE}
+        UPDATE person
+        SET
+            name = #{name},
+            gender = #{gender},
+            birthday = #{birthday},
+            id_card = #{idCard},
+            native_place = #{nativePlace},
+            address = #{address},
+            phone = #{phone},
+            password_hash = #{passwordHash},
+            is_active = #{isActive},
+            other = #{other}
+        WHERE code = #{code}
     </update>
 
     <delete id="delete" parameterType="String">
-        DELETE FROM PERSON WHERE P_CODE=#{P_CODE}
+        DELETE FROM person WHERE code = #{code}
     </delete>
+
 </mapper>

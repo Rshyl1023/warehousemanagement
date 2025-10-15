@@ -1,23 +1,31 @@
 package com.example.demo.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Data
+@TableName("person")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Person {
-    private String P_CODE;
-    private String P_NAME;
-    private String P_GENDER;
-    private LocalDate P_BIRTHDAY;
-    private String P_ID_CARD;
-    private String P_NATIVE;
-    private String P_ADDRESS;
-    private String P_PHONE;
-    private String P_PASSWORD_HASH;
-    private Boolean P_IS_ACTIVE;
-    private String P_OTHER;
+    // 使用 @TableId 标记主键，IdType.ASSIGN_ID 表示使用 Mybatis-Plus 的雪花算法（分布式）生成ID
+    @TableId(value = "p_code", type = IdType.ASSIGN_ID)
+    private String Code; // 字段名改为驼峰命名
+
+    private String name;
+    private String gender;
+    private LocalDate birthday;
+    private String idCard;
+    private String nativePlace;   // native 是 Java 关键字，不能用
+    private String address;
+    private String phone;
+    private String passwordHash;
+    private Boolean isActive;
+    private String other;
 }
