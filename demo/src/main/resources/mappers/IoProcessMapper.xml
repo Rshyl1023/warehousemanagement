@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.IoProcessMapper">
+
+    <update id="callIoProcess" statementType="CALLABLE">
+        {CALL sp_io_process(
+                #{ioNo, mode=IN, jdbcType=VARCHAR},
+                #{date, mode=IN, jdbcType=DATE},
+                #{type, mode=IN, jdbcType=VARCHAR},
+                #{operatorCode, mode=IN, jdbcType=VARCHAR},
+                #{handlerCode, mode=IN, jdbcType=VARCHAR},
+                #{remark, mode=IN, jdbcType=VARCHAR},
+                #{materialCode, mode=IN, jdbcType=VARCHAR},
+                #{qty, mode=IN, jdbcType=INTEGER},
+                #{resultCode, mode=OUT, jdbcType=INTEGER},
+                #{message, mode=OUT, jdbcType=VARCHAR}
+              )}
+    </update>
+
+</mapper>
