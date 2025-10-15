@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+
+
 @RestController
 @RequestMapping("/api/person")
 public class PersonController {
@@ -54,5 +57,10 @@ public class PersonController {
     @DeleteMapping("/{id}")
     public int delete(@PathVariable String id) {
         return service.delete(id);
+    }
+
+    @GetMapping("/search")
+    public List<Person> searchByName(@RequestParam(required = false) String keyword) {
+        return service.searchByNameKeyword(keyword);
     }
 }

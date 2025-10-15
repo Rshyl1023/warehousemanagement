@@ -11,6 +11,6 @@ public interface PersonMapper extends BaseMapper<Person> {
     List<Person> findAll();
     Person findById(String P_CODE);
     int insert(Person person);
-    int update(Person person);
     int delete(String P_CODE);
+
 }

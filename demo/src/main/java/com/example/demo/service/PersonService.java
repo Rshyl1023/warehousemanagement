@@ -12,4 +12,5 @@ public interface PersonService extends IService<Person> {
     boolean add(PersonAddDTO personAddDTO);
     boolean update(Person person);
     int delete(String id);
+    List<Person> searchByNameKeyword(String keyword);
 }
