@@ -18,7 +18,7 @@ public class IoService {
     public String generateIoNo() {
         String dateStr = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
         // 简化：固定从 000001 开始（实际应查数据库最大值）
-        return "IO" + dateStr + "000001";
+        return "IO" + dateStr + "000002";
     }
 
     public Map<String, Object> processIo(IoRequest request) {

@@ -72,7 +72,7 @@ public class ReportService {
                 .map(MaterialFlowDTO::getMaterialName)
                 .orElse("无");
 
-        setResponseHeader(response, "三年二班05号_物料进出仓流量统计");
+        setResponseHeader(response, "软工230130号_物料进出仓流量统计");
 
         List<List<String>> excelData = new ArrayList<>();
         // 表头
@@ -99,7 +99,7 @@ public class ReportService {
     // 导出月度进出仓单
     public void exportMonthlyIo(HttpServletResponse response, int year, int month) throws IOException {
         List<MonthlyIoDTO> data = getMonthlyIoData(year, month);
-        String fileName = String.format("三年二班05号_月度进出仓单_%d年%02d月", year, month);
+        String fileName = String.format("软工230130号_月度进出仓单_%d年%02d月", year, month);
         setResponseHeader(response, fileName);
         EasyExcel.write(response.getOutputStream(), MonthlyIoDTO.class)
                 .sheet("进出仓明细")
@@ -114,7 +114,7 @@ public class ReportService {
         String unit = "个";
 
         List<LedgerDTO> data = getLedgerData(year, materialCode);
-        String fileName = String.format("三年二班05号_仓库账本_%s_%d年", materialName, year);
+        String fileName = String.format("软工230130号_仓库账本_%s_%d年", materialName, year);
         setResponseHeader(response, fileName);
 
         try (var excelWriter = EasyExcel.write(response.getOutputStream())// 无模板
