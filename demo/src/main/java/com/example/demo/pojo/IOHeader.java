@@ -2,6 +2,7 @@ package com.example.demo.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,13 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("io_header")
 public class IOHeader {
-    @TableId(type = IdType.ASSIGN_ID)
-    private String ioNo;             // 原 IO_NO
-    private LocalDate ioDate;        // 原 IO_DATE
-    private String ioType;           // 原 IO_TYPE
-    private String operatorCode;     // 原 OPERATOR_CODE
-    private String handlerCode;      // 原 HANDLER_CODE
-    private String remark;           // 原 REMARK
+    @TableId(value = "no", type = IdType.INPUT)
+    private String no;               // 数据库字段: no
+    private LocalDate date;          // 数据库字段: date
+    private String type;             // 数据库字段: type
+    private String operatorCode;     // 数据库字段: operator_code
+    private String handlerCode;      // 数据库字段: handler_code
+    private String remark;           // 数据库字段: remark
 }

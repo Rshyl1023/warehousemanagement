@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("resource")
 public class Resource {
-    @TableId(type = IdType.ASSIGN_ID)
-    private String code;     // 原 R_CODE
-    private String name;     // 原 R_NAME
-    private String type;     // 原 R_TYPE
+    @TableId(value = "code", type = IdType.INPUT)
+    private String code;         // 数据库字段: code
+    private String name;         // 数据库字段: name
+    private String type;         // 数据库字段: type
 }

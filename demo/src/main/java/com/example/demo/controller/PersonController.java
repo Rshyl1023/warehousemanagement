@@ -28,7 +28,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(PersonAddDTO personAddDTO) {
+    public ResponseEntity<Void> add(@RequestBody PersonAddDTO personAddDTO) {
 
         boolean success = service.add(personAddDTO); //调用 Service 层处理 DTO 和业务逻辑
 

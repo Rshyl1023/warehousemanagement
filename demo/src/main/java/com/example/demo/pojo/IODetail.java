@@ -2,6 +2,7 @@ package com.example.demo.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("io_detail")
 public class IODetail {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Integer detailId;      // 原 DETAIL_ID
-    private String ioNo;           // 原 IO_NO
-    private String materialCode;   // 原 M_CODE（语义更清晰）
-    private Integer qty;           // 原 QTY
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;              // 数据库字段: id
+    private String ioNo;             // 数据库字段: io_no
+    private String materialCode;     // 数据库字段: material_code
+    private Integer qty;             // 数据库字段: qty
 }

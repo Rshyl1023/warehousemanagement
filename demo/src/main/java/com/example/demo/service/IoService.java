@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.demo.mapper.IOHeaderMapper;
 import com.example.demo.mapper.IoProcessMapper;
 import com.example.demo.dto.IoRequest;
+import com.example.demo.pojo.IOHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -14,11 +17,31 @@ public class IoService {
     @Autowired
     private IoProcessMapper ioProcessMapper;
 
-    // 生成单号：IO + 日期 + 6位序号（简化版，实际需加锁）
+    @Autowired
+    private IOHeaderMapper ioHeaderMapper;
+
+    // 生成单号：IO + 日期 + 6位序号（从数据库查询当天最大单号）
     public String generateIoNo() {
         String dateStr = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
-        // 简化：固定从 000001 开始（实际应查数据库最大值）
-        return "IO" + dateStr + "000002";
+        String prefix = "IO" + dateStr;
+        
+        // 查询当天最大单号
+        IOHeader latestHeader = ioHeaderMapper.selectOne(
+                new LambdaQueryWrapper<IOHeader>()
+                        .likeRight(IOHeader::getNo, prefix)
+                        .orderByDesc(IOHeader::getNo)
+                        .last("LIMIT 1")
+        );
+        
+        int nextSeq = 1;
+        if (latestHeader != null) {
+            String latestNo = latestHeader.getNo();
+            // 提取后6位序号
+            String seqStr = latestNo.substring(prefix.length());
+            nextSeq = Integer.parseInt(seqStr) + 1;
+        }
+        
+        return prefix + String.format("%06d", nextSeq);
     }
 
     public Map<String, Object> processIo(IoRequest request) {

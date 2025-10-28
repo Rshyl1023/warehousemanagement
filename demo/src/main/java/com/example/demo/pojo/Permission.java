@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("permission")
 public class Permission {
-    @TableId(type = IdType.ASSIGN_ID)
-    private String personCode;       // 原 P_CODE（P = Person）
-    private String resourceCode;     // 原 R_CODE（R = Resource）
-    private Boolean hasPermission;   // 原 HAS_PERMISSION
+    private String personCode;       // 数据库字段: person_code
+    private String resourceCode;     // 数据库字段: resource_code
+    private Boolean hasPermission;   // 数据库字段: has_permission
 }

@@ -85,15 +85,15 @@ public class AuthServiceImpl extends ServiceImpl<PermissionMapper, Permission> i
         }
     }
 
-    // 4. 添加资源（code 自动生成）
+    // 4. 添加资源（code 需要手动生成）
     @Override
     public boolean addResource(String name, String type) {
         if (!StringUtils.hasText(name)) return false;
 
         Resource res = new Resource();
-        // 已经设置了MBP分布式雪花ID
-//        String code = "RES_" + System.currentTimeMillis();
-//        res.setCode(code);
+        // 生成资源代码
+        String code = "RES_" + System.currentTimeMillis();
+        res.setCode(code);
         res.setName(name);
         res.setType(type != null ? type : "MENU");
         return resourceMapper.insert(res) > 0;

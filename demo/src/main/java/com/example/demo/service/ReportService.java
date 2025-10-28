@@ -3,9 +3,14 @@ package com.example.demo.service;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.demo.dto.LedgerDTO;
 import com.example.demo.dto.MaterialFlowDTO;
 import com.example.demo.dto.MonthlyIoDTO;
+import com.example.demo.mapper.MaterialMapper;
+import com.example.demo.mapper.ReportMapper;
+import com.example.demo.pojo.Material;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,40 +26,25 @@ import java.util.List;
 @Service
 public class ReportService {
 
-    // 模拟数据（实际应查数据库）
+    @Autowired
+    private ReportMapper reportMapper;
+
+    @Autowired
+    private MaterialMapper materialMapper;
+
+    // 从数据库查询物料流量数据
     public List<MaterialFlowDTO> getMaterialFlowData(LocalDate start, LocalDate end) {
-        List<MaterialFlowDTO> list = new ArrayList<>();
-        list.add(new MaterialFlowDTO() {{
-            setMaterialCode("M001"); setMaterialName("螺丝"); setInQty(100); setOutQty(30); setNetFlow(70);
-        }});
-        list.add(new MaterialFlowDTO() {{
-            setMaterialCode("M002"); setMaterialName("螺母"); setInQty(50); setOutQty(45); setNetFlow(5);
-        }});
-        list.add(new MaterialFlowDTO() {{
-            setMaterialCode("M003"); setMaterialName("垫片"); setInQty(20); setOutQty(20); setNetFlow(0);
-        }});
-        return list;
+        return reportMapper.getMaterialFlowData(start, end);
     }
 
+    // 从数据库查询月度进出仓数据
     public List<MonthlyIoDTO> getMonthlyIoData(int year, int month) {
-        List<MonthlyIoDTO> list = new ArrayList<>();
-        list.add(new MonthlyIoDTO() {{
-            setIoNo("IO2025100001"); setDate("2025-10-05"); setType("IN");
-            setMaterialCode("M001"); setQty(50); setOperatorCode("P001"); setHandlerCode("P002");
-        }});
-        list.add(new MonthlyIoDTO() {{
-            setIoNo("IO2025100002"); setDate("2025-10-12"); setType("OUT");
-            setMaterialCode("M001"); setQty(20); setOperatorCode("P001"); setHandlerCode("P003");
-        }});
-        return list;
+        return reportMapper.getMonthlyIoData(year, month);
     }
 
+    // 从数据库查询仓库账本数据
     public List<LedgerDTO> getLedgerData(int year, String materialCode) {
-        List<LedgerDTO> list = new ArrayList<>();
-        list.add(new LedgerDTO() {{ setDate("2025-01-10"); setInQty(100); setOutQty(0); setBalance(100); }});
-        list.add(new LedgerDTO() {{ setDate("2025-03-15"); setInQty(0); setOutQty(30); setBalance(70); }});
-        list.add(new LedgerDTO() {{ setDate("2025-06-20"); setInQty(0); setOutQty(20); setBalance(50); }});
-        return list;
+        return reportMapper.getLedgerData(year, materialCode);
     }
 
     // 通用：设置响应头
@@ -108,10 +98,13 @@ public class ReportService {
 
     // 导出仓库账本（带物料信息头）
     public void exportLedger(HttpServletResponse response, int year, String materialCode) throws IOException {
-        // 模拟物料信息
-        String materialName = "不锈钢螺丝";
-        String spec = "M5x20";
-        String unit = "个";
+        // 从数据库查询物料信息
+        Material material = materialMapper.selectOne(
+                new LambdaQueryWrapper<Material>().eq(Material::getCode, materialCode)
+        );
+        String materialName = material != null ? material.getName() : "未知物料";
+        String spec = material != null ? material.getSpec() : "";
+        String unit = material != null ? material.getUnit() : "";
 
         List<LedgerDTO> data = getLedgerData(year, materialCode);
         String fileName = String.format("软工230130号_仓库账本_%s_%d年", materialName, year);
