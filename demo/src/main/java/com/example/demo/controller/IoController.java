@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.IoBatchRequest;
 import com.example.demo.dto.IoRequest;
 import com.example.demo.service.IoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,31 @@ public class IoController {
     @PostMapping("/process")
     public Map<String, Object> processIo(@RequestBody IoRequest request) {
         return ioService.processIo(request);
+    }
+
+    /**
+     * 批量进出仓操作
+     * POST /api/io/batch-process
+     * {
+     *   "operatorCode": "P001",
+     *   "handlerCode": "P002",
+     *   "remark": "批量进货",
+     *   "items": [
+     *     {
+     *       "materialCode": "M001",
+     *       "type": "IN",
+     *       "qty": 100
+     *     },
+     *     {
+     *       "materialCode": "M002",
+     *       "type": "OUT",
+     *       "qty": 50
+     *     }
+     *   ]
+     * }
+     */
+    @PostMapping("/batch-process")
+    public Map<String, Object> batchProcessIo(@RequestBody IoBatchRequest request) {
+        return ioService.processBatchIo(request);
     }
 }

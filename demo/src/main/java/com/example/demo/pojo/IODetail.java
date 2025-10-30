@@ -16,5 +16,6 @@ public class IODetail {
     private Integer id;              // 数据库字段: id
     private String ioNo;             // 数据库字段: io_no
     private String materialCode;     // 数据库字段: material_code
+    private String type;             // 数据库字段: type (IN/OUT)
     private Integer qty;             // 数据库字段: qty
 }

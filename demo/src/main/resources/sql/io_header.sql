@@ -24,7 +24,6 @@ DROP TABLE IF EXISTS `io_header`;
 CREATE TABLE `io_header`  (
   `no` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '进出仓单号 (Primary Key, 自动生成)',
   `date` date NOT NULL COMMENT '进出仓日期',
-  `type` enum('IN','OUT') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '单据类型: IN(进仓), OUT(出仓)',
   `operator_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '操作人员代码 (外键: person.code)',
   `handler_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '经手人代码 (外键: person.code)',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
