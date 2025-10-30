@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.ReportMapper">
+
+    <!-- 物料流量统计 -->
+    <select id="getMaterialFlowData" resultType="com.example.demo.dto.MaterialFlowDTO">
+        SELECT
+            m.code AS materialCode,
+            m.name AS materialName,
+            COALESCE(SUM(CASE WHEN d.type = 'IN' THEN d.qty ELSE 0 END), 0) AS inQty,
+            COALESCE(SUM(CASE WHEN d.type = 'OUT' THEN d.qty ELSE 0 END), 0) AS outQty,
+            COALESCE(SUM(CASE WHEN d.type = 'IN' THEN d.qty ELSE -d.qty END), 0) AS netFlow
+        FROM material m
+        LEFT JOIN io_detail d ON m.code = d.material_code
+        LEFT JOIN io_header h ON d.io_no = h.no
+            AND h.date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY m.code, m.name
+        ORDER BY m.code
+    </select>
+
+    <!-- 月度进出仓单明细 -->
+    <select id="getMonthlyIoData" resultType="com.example.demo.dto.MonthlyIoDTO">
+        SELECT
+            h.no AS ioNo,
+            DATE_FORMAT(h.date, '%Y-%m-%d') AS date,
+            d.type AS type,
+            d.material_code AS materialCode,
+            d.qty AS qty,
+            h.operator_code AS operatorCode,
+            h.handler_code AS handlerCode
+        FROM io_header h
+        INNER JOIN io_detail d ON h.no = d.io_no
+        WHERE YEAR(h.date) = #{year} AND MONTH(h.date) = #{month}
+        ORDER BY h.date, h.no
+    </select>
+
+    <!-- 仓库账本 -->
+    <select id="getLedgerData" resultType="com.example.demo.dto.LedgerDTO">
+        SELECT
+            DATE_FORMAT(h.date, '%Y-%m-%d') AS date,
+            COALESCE(SUM(CASE WHEN d.type = 'IN' THEN d.qty ELSE 0 END), 0) AS inQty,
+            COALESCE(SUM(CASE WHEN d.type = 'OUT' THEN d.qty ELSE 0 END), 0) AS outQty,
+            (
+                SELECT COALESCE(SUM(CASE WHEN d2.type = 'IN' THEN d2.qty ELSE -d2.qty END), 0)
+                FROM io_header h2
+                INNER JOIN io_detail d2 ON h2.no = d2.io_no
+                WHERE YEAR(h2.date) = #{year}
+                  AND d2.material_code = #{materialCode}
+                  AND h2.date &lt;= h.date
+            ) AS balance
+        FROM io_header h
+        INNER JOIN io_detail d ON h.no = d.io_no
+        WHERE YEAR(h.date) = #{year} AND d.material_code = #{materialCode}
+        GROUP BY h.date
+        ORDER BY h.date
+    </select>
+
+</mapper>
