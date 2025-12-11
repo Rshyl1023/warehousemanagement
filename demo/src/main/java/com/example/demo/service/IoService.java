@@ -1,12 +1,16 @@
 package com.example.demo.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.demo.dto.WarehouseRecordDTO;
 import com.example.demo.mapper.IOHeaderMapper;
 import com.example.demo.mapper.IoProcessMapper;
 import com.example.demo.dto.IoBatchRequest;
 import com.example.demo.dto.IoItemDTO;
 import com.example.demo.dto.IoRequest;
+import com.example.demo.dto.IoQueryDTO;
 import com.example.demo.pojo.IOHeader;
+import com.example.demo.pojo.IODetail;
+import com.example.demo.mapper.IODetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,13 @@ public class IoService {
     @Autowired
     private IOHeaderMapper ioHeaderMapper;
 
+    @Autowired
+    private IODetailMapper ioDetailMapper;
+
+    public List<WarehouseRecordDTO> getWarehouseRecords() {
+        return ioDetailMapper.findWarehouseRecords();
+    }
+    
     // 生成单号：IO + 日期 + 6位序号（从数据库查询当天最大单号）
     public String generateIoNo() {
         String dateStr = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -203,5 +214,64 @@ public class IoService {
             "failCount", failCount,
             "details", results
         );
+    }
+
+    /**
+     * 查询进出仓单据
+     * @param queryDTO 查询条件
+     * @return 符合条件的单据列表
+     */
+    public List<Map<String, Object>> queryIoHeaders(IoQueryDTO queryDTO) {
+        LambdaQueryWrapper<IOHeader> headerWrapper = new LambdaQueryWrapper<>();
+        
+        // 日期范围查询
+        if (queryDTO.getStartDate() != null) {
+            headerWrapper.ge(IOHeader::getDate, queryDTO.getStartDate());
+        }
+        if (queryDTO.getEndDate() != null) {
+            headerWrapper.le(IOHeader::getDate, queryDTO.getEndDate());
+        }
+        
+        // 操作人员查询
+        if (queryDTO.getOperatorCode() != null && !queryDTO.getOperatorCode().isEmpty()) {
+            headerWrapper.eq(IOHeader::getOperatorCode, queryDTO.getOperatorCode());
+        }
+        
+        // 备注模糊查询
+        if (queryDTO.getRemark() != null && !queryDTO.getRemark().isEmpty()) {
+            headerWrapper.like(IOHeader::getRemark, queryDTO.getRemark());
+        }
+        
+        // 查询符合条件的主表记录
+        List<IOHeader> headers = ioHeaderMapper.selectList(headerWrapper);
+        List<Map<String, Object>> result = new ArrayList<>();
+        
+        // 遍历主表记录，查询对应的明细信息
+        for (IOHeader header : headers) {
+            LambdaQueryWrapper<IODetail> detailWrapper = new LambdaQueryWrapper<>();
+            detailWrapper.eq(IODetail::getIoNo, header.getNo());
+            
+            // 物料代码查询
+            if (queryDTO.getMaterialCode() != null && !queryDTO.getMaterialCode().isEmpty()) {
+                detailWrapper.eq(IODetail::getMaterialCode, queryDTO.getMaterialCode());
+            }
+            
+            // 进出仓类型查询
+            if (queryDTO.getType() != null && !queryDTO.getType().isEmpty()) {
+                detailWrapper.eq(IODetail::getType, queryDTO.getType());
+            }
+            
+            List<IODetail> details = ioDetailMapper.selectList(detailWrapper);
+            
+            // 如果有明细记录，则添加到结果中
+            if (!details.isEmpty()) {
+                Map<String, Object> record = new HashMap<>();
+                record.put("header", header);
+                record.put("details", details);
+                result.add(record);
+            }
+        }
+        
+        return result;
     }
 }

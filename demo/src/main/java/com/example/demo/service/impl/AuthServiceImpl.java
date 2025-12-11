@@ -28,18 +28,23 @@ public class AuthServiceImpl extends ServiceImpl<PermissionMapper, Permission> i
 
     // 1. 登录（明文验证）
     @Override
-    public String login(String code, String password) {
-        if (!StringUtils.hasText(code) || !StringUtils.hasText(password)) {
+    public String login(String name, String passwordHash) {
+        if (!StringUtils.hasText(name) || !StringUtils.hasText(passwordHash)) {
             return null;
         }
 
-        Person person = personMapper.selectById(code);
+        // 根据用户名查询用户
+        Person person = personMapper.selectOne(
+            new LambdaQueryWrapper<Person>()
+                .eq(Person::getName, name)
+        );
+        
         if (person == null || !person.getIsActive()) {
             return null;
         }
 
-        // 明文比对（后续可替换为 BCrypt.matches）
-        if (password.equals(person.getPasswordHash())) {
+        // 明文比对password_hash（后续可替换为 BCrypt.matches）
+        if (passwordHash.equals(person.getPasswordHash())) {
             // 临时：用 UUID 当作 token（你可存入 other 字段，但这里只返回 code 作凭证）
             return person.getCode(); // 临时返回 code 作为登录凭证
         }

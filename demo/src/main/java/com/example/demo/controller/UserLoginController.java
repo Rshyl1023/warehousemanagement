@@ -19,13 +19,13 @@ public class UserLoginController {
     // POST /api/auth/login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO dto) {
-        // 正则校验（用户名：字母数字下划线，长度3-20；密码：6-20位）
-        if (!dto.getCode().matches("^[a-zA-Z0-9_]{3,20}$") ||
-                !dto.getPassword().matches("^.{6,20}$")) {
+        // 正则校验（用户名：字母数字下划线汉字，长度1-50；密码：6-20位）
+        if (!dto.getName().matches("^[a-zA-Z0-9_\\u4e00-\\u9fa5]{1,50}$") ||
+                !dto.getPasswordHash().matches("^.{6,20}$")) {
             return ResponseEntity.badRequest().body("用户名或密码格式错误");
         }
 
-        String token = authService.login(dto.getCode(), dto.getPassword());
+        String token = authService.login(dto.getName(), dto.getPasswordHash());
         if (token == null) {
             return ResponseEntity.status(401).body("用户名或密码错误");
         }

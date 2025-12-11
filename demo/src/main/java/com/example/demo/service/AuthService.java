@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AuthService {
     // 1. 用户登录（明文比对）
-    String login(String code, String password);
+    String login(String name, String passwordHash);
 
     // 2. 查询用户有权访问的资源列表
     List<Resource> getUserResources(String personCode);
