@@ -61,7 +61,11 @@ public class IoService {
         return prefix + String.format("%06d", nextSeq);
     }
 
-    @Transactional
+    /**
+     * 进出仓处理
+     * rollbackFor = Exception.class
+     */
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> processIo(IoRequest request) {
         // 参数校验
         if (!"IN".equals(request.getType()) && !"OUT".equals(request.getType())) {
@@ -76,7 +80,6 @@ public class IoService {
         Map<String, Object> params = new HashMap<>();
         params.put("ioNo", ioNo);
         params.put("date", java.sql.Date.valueOf(LocalDate.now()));
-        // 注意：type现在不再传给主表，而是在明细表中
         params.put("type", request.getType()); // 传递给存储过程，由存储过程处理
         params.put("operatorCode", request.getOperatorCode());
         params.put("handlerCode", request.getHandlerCode());
@@ -111,10 +114,9 @@ public class IoService {
 
     /**
      * 批量进出仓处理
-     * @param request 批量请求，包含多个物料明细
-     * @return 处理结果
+     * rollbackFor = Exception.class
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> processBatchIo(IoBatchRequest request) {
         // 参数校验
         if (request.getItems() == null || request.getItems().isEmpty()) {

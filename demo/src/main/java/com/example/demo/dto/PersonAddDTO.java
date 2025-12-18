@@ -14,13 +14,13 @@ public class PersonAddDTO {
     private String name;
 
     @NotBlank(message = "性别不能为空")
-    private String gender; // 建议配合枚举校验，如 "男"/"女"
+    private String gender;
 
     private LocalDate birthday;
 
     private String idCard;
 
-    private String nativePlace; // 避免使用 Java 关键字 'native'
+    private String nativePlace;
 
     private String address;
 

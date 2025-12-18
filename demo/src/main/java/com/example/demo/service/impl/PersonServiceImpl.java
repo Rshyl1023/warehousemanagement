@@ -4,15 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.dto.PersonAddDTO;
+import com.example.demo.mapper.IOHeaderMapper;
 import com.example.demo.mapper.PersonMapper;
+import com.example.demo.pojo.IOHeader;
 import com.example.demo.pojo.Person;
 import com.example.demo.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
 public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> implements PersonService {
     @Autowired
     private PersonMapper mapper;
+
+    @Autowired
+    private IOHeaderMapper ioHeaderMapper;
 
     private static final String ID_CARD_REGEX = "^[1-9]\\d{5}(18|19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}[0-9X]$";
     private static final Pattern ID_CARD_PATTERN = Pattern.compile(ID_CARD_REGEX);
@@ -94,6 +97,9 @@ public class PersonServiceImpl extends ServiceImpl<PersonMapper, Person> impleme
 
     @Override
     public int delete(String id) {
-        return mapper.delete(id);
+        Person person = new Person();
+        person.setCode(id);
+        person.setIsActive(false);
+        return mapper.updateById(person);
     }
 }

@@ -22,6 +22,9 @@ public class IoController {
     @Autowired
     private IoService ioService;
 
+    /**
+     * 查询进出仓记录
+     */
     @GetMapping("/records")
     public List<WarehouseRecordDTO> getWarehouseRecords() {
         return ioService.getWarehouseRecords();
